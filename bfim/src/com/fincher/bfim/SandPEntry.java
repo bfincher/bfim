@@ -32,7 +32,7 @@ public class SandPEntry {
 	private static final String BEGIN_DAY_TAG = "!!BEGIN_DAY!!";
 	private static final String BEGIN_YEAR_TAG = "!!BEGIN_YEAR!!";
 	
-	private static final String URL_STRING = "http://ichart.finance.yahoo.com/table.csv?s=%5EGSPC&a=" 
+	private static final String HISTORICAL_URL_STRING = "http://ichart.finance.yahoo.com/table.csv?s=%5EGSPC&a=" 
 			+ BEGIN_MONTH_TAG + "&b=" 
 			+ BEGIN_DAY_TAG + "&c=" 
 			+ BEGIN_YEAR_TAG + "&d=" 
@@ -105,10 +105,10 @@ public class SandPEntry {
 	
 	public static List<SandPEntry> getFromWeb(Date beginDate, Date endDate) 
 	throws IOException {
-		System.setProperty("http.proxyHost","proxy.mdnt.com");
-		System.setProperty("http.proxyPort", "9119");
-//		System.setProperty("http.proxyUser", "s149450");
-//		System.setProperty("http.proxyPassword", "B@i4emmB@i4emm");
+		System.setProperty("http.proxyHost","centralproxy.northgrum.com");
+		System.setProperty("http.proxyPort", "80");
+		System.setProperty("http.proxyUser", "s149450");
+		System.setProperty("http.proxyPassword", "B@i4emmB@i4emm");
 		
 		GregorianCalendar beginCal = new GregorianCalendar();
 		beginCal.setTime(beginDate);
@@ -116,7 +116,7 @@ public class SandPEntry {
 		GregorianCalendar endCal = new GregorianCalendar();
 		endCal.setTime(endDate);
 		
-		String tempUrl = URL_STRING.replace("%END_MONTH%", String.valueOf(endCal.get(GregorianCalendar.MONTH)));
+		String tempUrl = HISTORICAL_URL_STRING.replace("%END_MONTH%", String.valueOf(endCal.get(GregorianCalendar.MONTH)));
 		tempUrl = tempUrl.replace(END_MONTH_TAG, String.valueOf(endCal.get(GregorianCalendar.MONTH)));
 		tempUrl = tempUrl.replace(END_DAY_TAG, String.valueOf(endCal.get(GregorianCalendar.DATE)));
 		tempUrl = tempUrl.replace(END_YEAR_TAG, String.valueOf(endCal.get(GregorianCalendar.YEAR)));
@@ -136,8 +136,8 @@ public class SandPEntry {
 		final SimpleDateFormat webSdf = new SimpleDateFormat("yyyy-MM-dd");
 	
 		String csv;
-		while ((csv = urlInput.readLine()) != null) {
-			try {
+		try {
+			while ((csv = urlInput.readLine()) != null) {
 				StringTokenizer tokenizer = new StringTokenizer(csv, ",\"");
 				Date date = webSdf.parse(tokenizer.nextToken());
 				for (int i = 0; i < 5; i++) {
@@ -145,17 +145,57 @@ public class SandPEntry {
 				}
 			
 				SandPEntry newEntry = new SandPEntry(new Float(tokenizer.nextToken()), date);
-				System.out.println("Adding entry " +  newEntry);
 				entries.add(newEntry);
-			} catch (ParseException pe) {
-				throw new IOException(pe);
 			}
-		}
 		
-		if (!entries.isEmpty()) {
-			Collections.sort(entries, new SandPEntry.DateComparator());
+			if (!entries.isEmpty()) {
+				Collections.sort(entries, new SandPEntry.DateComparator());
+			}
+		
+//			getCurrentPrice(entries, endCal);
+		
+		} catch (ParseException pe) {
+			throw new IOException(pe);
 		}
 		
 		return entries;
 	}
+	
+//	private static void getCurrentPrice(List<SandPEntry> entries, GregorianCalendar endCal) throws IOException, ParseException  {
+//		endCal.set(GregorianCalendar.HOUR_OF_DAY, 0);
+//		endCal.set(GregorianCalendar.MINUTE, 0);
+//		endCal.set(GregorianCalendar.SECOND, 0);
+//		endCal.set(GregorianCalendar.MILLISECOND, 0);
+//		
+//		GregorianCalendar today = new GregorianCalendar();
+//		today.set(GregorianCalendar.HOUR_OF_DAY, 0);
+//		today.set(GregorianCalendar.MINUTE, 0);
+//		today.set(GregorianCalendar.SECOND, 0);
+//		today.set(GregorianCalendar.MILLISECOND, 0);
+//		if (endCal.compareTo(today) >= 0) {					
+//			// get the latest price
+//			URL url = new URL("http://quote.yahoo.com/d/quotes.csv?s=^GSPC&f=sl1d1t1c1ohgv&e=.csv");
+//			
+//			BufferedReader input = new BufferedReader(new InputStreamReader(url.openStream()));
+//			String csv = input.readLine();
+//			System.out.println("CSV = " + csv);
+//			StringTokenizer tokenizer = new StringTokenizer(csv, ",\"");
+//			
+//			tokenizer.nextToken(); // skip ticker symbol
+//			float price = new Float(tokenizer.nextToken());
+//			
+//			final SimpleDateFormat webSdf = new SimpleDateFormat("MM/dd/yyyy");
+//			
+//			Date date = webSdf.parse(tokenizer.nextToken());
+//			
+//			SandPEntry entry = new SandPEntry(price, date);
+//			if (entries.isEmpty()) {
+//				entries.add(entry);
+//			} else if (date.compareTo(entries.get(0).date) > 0) {						
+//				entries.add(0, new SandPEntry(price, date));
+//			}		
+//			
+//			input.close();
+//		}
+//	}
 }
