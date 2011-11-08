@@ -105,10 +105,10 @@ public class SandPEntry {
 	
 	public static List<SandPEntry> getFromWeb(Date beginDate, Date endDate) 
 	throws IOException {
-		System.setProperty("http.proxyHost","centralproxy.northgrum.com");
-		System.setProperty("http.proxyPort", "80");
-		System.setProperty("http.proxyUser", "s149450");
-		System.setProperty("http.proxyPassword", "B@i4emmB@i4emm");
+//		System.setProperty("http.proxyHost","proxy_host");
+//		System.setProperty("http.proxyPort", "80");
+//		System.setProperty("http.proxyUser", "proxy_username");
+//		System.setProperty("http.proxyPassword", "pw");
 		
 		GregorianCalendar beginCal = new GregorianCalendar();
 		beginCal.setTime(beginDate);
@@ -152,7 +152,7 @@ public class SandPEntry {
 				Collections.sort(entries, new SandPEntry.DateComparator());
 			}
 		
-//			getCurrentPrice(entries, endCal);
+			getCurrentPrice(entries, endCal);
 		
 		} catch (ParseException pe) {
 			throw new IOException(pe);
@@ -161,41 +161,41 @@ public class SandPEntry {
 		return entries;
 	}
 	
-//	private static void getCurrentPrice(List<SandPEntry> entries, GregorianCalendar endCal) throws IOException, ParseException  {
-//		endCal.set(GregorianCalendar.HOUR_OF_DAY, 0);
-//		endCal.set(GregorianCalendar.MINUTE, 0);
-//		endCal.set(GregorianCalendar.SECOND, 0);
-//		endCal.set(GregorianCalendar.MILLISECOND, 0);
-//		
-//		GregorianCalendar today = new GregorianCalendar();
-//		today.set(GregorianCalendar.HOUR_OF_DAY, 0);
-//		today.set(GregorianCalendar.MINUTE, 0);
-//		today.set(GregorianCalendar.SECOND, 0);
-//		today.set(GregorianCalendar.MILLISECOND, 0);
-//		if (endCal.compareTo(today) >= 0) {					
-//			// get the latest price
-//			URL url = new URL("http://quote.yahoo.com/d/quotes.csv?s=^GSPC&f=sl1d1t1c1ohgv&e=.csv");
-//			
-//			BufferedReader input = new BufferedReader(new InputStreamReader(url.openStream()));
-//			String csv = input.readLine();
-//			System.out.println("CSV = " + csv);
-//			StringTokenizer tokenizer = new StringTokenizer(csv, ",\"");
-//			
-//			tokenizer.nextToken(); // skip ticker symbol
-//			float price = new Float(tokenizer.nextToken());
-//			
-//			final SimpleDateFormat webSdf = new SimpleDateFormat("MM/dd/yyyy");
-//			
-//			Date date = webSdf.parse(tokenizer.nextToken());
-//			
-//			SandPEntry entry = new SandPEntry(price, date);
-//			if (entries.isEmpty()) {
-//				entries.add(entry);
-//			} else if (date.compareTo(entries.get(0).date) > 0) {						
-//				entries.add(0, new SandPEntry(price, date));
-//			}		
-//			
-//			input.close();
-//		}
-//	}
+	private static void getCurrentPrice(List<SandPEntry> entries, GregorianCalendar endCal) throws IOException, ParseException  {		
+		endCal.set(GregorianCalendar.HOUR_OF_DAY, 0);
+		endCal.set(GregorianCalendar.MINUTE, 0);
+		endCal.set(GregorianCalendar.SECOND, 0);
+		endCal.set(GregorianCalendar.MILLISECOND, 0);
+		
+		GregorianCalendar today = new GregorianCalendar();
+		today.set(GregorianCalendar.HOUR_OF_DAY, 0);
+		today.set(GregorianCalendar.MINUTE, 0);
+		today.set(GregorianCalendar.SECOND, 0);
+		today.set(GregorianCalendar.MILLISECOND, 0);
+		if (endCal.compareTo(today) >= 0) {					
+			// get the latest price
+			URL url = new URL("http://quote.yahoo.com/d/quotes.csv?s=^GSPC&f=sl1d1t1c1ohgv&e=.csv");
+			
+			BufferedReader input = new BufferedReader(new InputStreamReader(url.openStream()));
+			String csv = input.readLine();
+			System.out.println("CSV = " + csv);
+			StringTokenizer tokenizer = new StringTokenizer(csv, ",\"");
+			
+			tokenizer.nextToken(); // skip ticker symbol
+			float price = new Float(tokenizer.nextToken());
+			
+			final SimpleDateFormat webSdf = new SimpleDateFormat("MM/dd/yyyy");
+			
+			Date date = webSdf.parse(tokenizer.nextToken());
+			
+			SandPEntry entry = new SandPEntry(price, date);
+			if (entries.isEmpty()) {
+				entries.add(entry);
+			} else if (date.compareTo(entries.get(0).date) > 0) {						
+				entries.add(0, new SandPEntry(price, date));
+			}		
+			
+			input.close();
+		}
+	}
 }
