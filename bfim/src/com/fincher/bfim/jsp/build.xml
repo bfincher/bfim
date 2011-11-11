@@ -69,10 +69,12 @@
 		<TextToHtml
 			outDir="${html.gen.dir}" >
 			
-			<fileset dir="${basedir}">
-				<include name="*.jsp"/>
-				<include name="*.html"/>
+			<fileset dir="${basedir}/../">
+				<include name="jsp/*.jsp"/>
+				<include name="jsp/*.html"/>
+				<include name="jsp/*.java"/>
 				<include name="*.java"/>
+				<exclude name="jsp/bfim_jsp_doc.html" />
 			</fileset>
 		</TextToHtml>
 		
