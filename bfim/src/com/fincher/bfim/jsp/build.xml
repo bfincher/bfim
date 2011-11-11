@@ -6,9 +6,13 @@
 	<property name="lib.dir" value="${webinf.dir}/lib" />
 	<property name="war.file" value="${basedir}/bfim_jsp.war" />
 	
+	<property name="html.gen.dir" value="${basedir}/html_gen" />
+	<property name="prototype.dir" value="../../../../../../prototype" />
+	
 	<target name="clean">
 		<delete dir="${war.dir}" />
 		<delete file="${war.file}" />
+		<delete file="${html.gen.dir}" />
 	</target>
 	
 	<target name="build">
@@ -42,9 +46,43 @@
 		</jar>
 	</target>
 	
+	<target name="htmlGen">
+		<mkdir dir="${html.gen.dir}"/>
+		
+		<property name="temp.class.dir" value="${html.gen.dir}/tmp_class" />
+		<delete dir="${temp.class.dir}" />
+		<mkdir dir="${temp.class.dir}" />
+		
+		<javac debug="on"
+			destdir="${temp.class.dir}"
+			srcdir="${prototype.dir}/src" >
+			
+			<include name="com/fincher/text_to_html/*.java"/>
+		</javac>
+		
+		<taskdef classname="com.fincher.text_to_html.TextToHtml" name="TextToHtml" >
+			<classpath>
+				<pathelement path="${temp.class.dir}"/>
+			</classpath>
+		</taskdef>
+		
+		<TextToHtml
+			outDir="${html.gen.dir}" >
+			
+			<fileset dir="${basedir}">
+				<include name="*.jsp"/>
+				<include name="*.html"/>
+				<include name="*.java"/>
+			</fileset>
+		</TextToHtml>
+		
+		<delete dir="${temp.class.dir}" />
+	</target>
+	
 	
 	<target name="all">
 		<antcall target="clean" />
 		<antcall target="build" />
+		<antcall target="htmlGen" />
 	</target>
 </project>
