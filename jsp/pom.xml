@@ -5,20 +5,20 @@
 	<parent>
 		<groupId>com.fincher</groupId>
 		<artifactId>com.fincher</artifactId>
-		<version>1.0.0</version>
+		<version>1.0.2</version>
 	</parent>
 	
 	<groupId>com.fincher.bfim</groupId>
 	<artifactId>bfim-jsp</artifactId>
 	<packaging>war</packaging>
-	<version>1.0</version>
+	<version>1.2</version>
 	<name>BFIM JSP</name>
 	<url>http://maven.apache.org</url>
 	<dependencies>
 		<dependency>
 			<groupId>com.fincher.bfim</groupId>
 			<artifactId>bfim-core</artifactId>
-			<version>1.0</version>
+			<version>1.2</version>
 			<scope>compile</scope>
 		</dependency>
 
@@ -39,7 +39,7 @@
 			<plugin>
 				<groupId>com.fincher</groupId>
 				<artifactId>text-to-html-plugin</artifactId>
-				<version>1.0</version>
+				<version>1.1</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
