@@ -1,0 +1,39 @@
+<HTML>
+<HEAD><TITLE> 
+    Brian Fincher Investment Method
+</TITLE></HEAD>
+
+<BODY BGCOLOR="white">
+
+<CENTER>
+<TABLE WIDTH=60% BORDER=1 CELLPADDING=10>
+<TR>
+<TH> Date </TH>
+<TH> Price </TH>
+<TH> 4 Days </TH>
+<TH> 18 Days </TH>
+<TH> Buy/Sell </TH>
+</TR>
+
+
+{% for entry in entries %} 
+	<TR>
+		<TD>{{ entry.date }}</TD>
+		<TD>{{ entry.price }}</TD>
+		<TD>{{ entry.fourDays }}</TD>
+		<TD>{{ entry.eighteenDays }}</TD>
+		
+		{% if entry.buySell == "Buy" %}
+			<TD BGCOLOR=GREEN>{{ entry.buySell }}</TD>
+		{% elif entry.buySell == "Sell" %} 			
+			<TD BGCOLOR=RED> {{ entry.buySell }}</TD>
+		{% endif %}
+		<!-- <TD>{{ entry.buySell }}</TD> --> 
+	</TR>
+{% endfor %}
+
+</TABLE>
+</CENTER>
+
+</BODY>
+</HTML>
