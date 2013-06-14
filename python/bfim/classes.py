@@ -1,5 +1,6 @@
 import urllib2
 import datetime
+import time
 
 class SandPEntry:
     
@@ -35,6 +36,20 @@ __HISTORICAL_URL_STRING += __END_YEAR_TAG
 __HISTORICAL_URL_STRING += "&g=d&ignore=.csv";
 
 def getFromWeb(beginDate, endDate):
+    now = datetime.datetime.now().date()
+    entries = []
+    if (endDate >= now):
+        url = "http://quote.yahoo.com/d/quotes.csv?s=^GSPC&f=sl1d1t1c1ohgv&e=.csv"
+	fileHandle = urllib2.urlopen(url)
+	content = fileHandle.read()
+	split = content.split(',')
+	price = split[1]
+	dateStr = split[2]
+	dateStr = dateStr.replace('"', '')
+
+        entry = SandPEntry(price, parseDateMMDDYYYYSlash(dateStr))
+        entries.append(entry)
+
     url = __HISTORICAL_URL_STRING.replace(__BEGIN_MONTH_TAG, str(beginDate.month))
     url = url.replace(__BEGIN_DAY_TAG, str(beginDate.day))
     url = url.replace(__BEGIN_YEAR_TAG, str(beginDate.year))
@@ -49,7 +64,6 @@ def getFromWeb(beginDate, endDate):
     fileHandle.close()
     
     lines = lines[1:] # skip the header line
-    entries = []
     
     for line in lines:
         if (len(line) > 0) :
@@ -61,7 +75,9 @@ def getFromWeb(beginDate, endDate):
                 print ('line = ' + line + '.')
         
             entry = SandPEntry(price, parseDateYYYYMMDD(dateStr))
-            entries.append(entry)
+
+	    if (len(entries) == 0 || entry.date != entries[0].date):
+                entries.append(entry)
             
     for i in range(len(entries)) :
         entry = entries[i]
@@ -106,4 +122,8 @@ def parseDateMMDDYYYY(dateStr):
     split = dateStr.split('-')
     date = datetime.date(int(split[2]), int(split[0]), int(split[1]))
     return date
-    
+
+def parseDateMMDDYYYYSlash(dateStr):
+    split = dateStr.split('/')
+    date = datetime.date(int(split[2]), int(split[0]), int(split[1]))
+    return date
