@@ -76,7 +76,7 @@ def getFromWeb(beginDate, endDate):
         
             entry = SandPEntry(price, parseDateYYYYMMDD(dateStr))
 
-	    if (len(entries) == 0 || entry.date != entries[0].date):
+	    if (len(entries) == 0 or entry.date != entries[0].date):
                 entries.append(entry)
             
     for i in range(len(entries)) :
