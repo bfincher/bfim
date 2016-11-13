@@ -1,7 +1,10 @@
+import os
 # Django settings for bfim_site project.
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+
+BASE_DIR=os.path.dirname(os.path.dirname(os.path.abspath(os.path.join('../', __file__))))
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
@@ -15,7 +18,7 @@ DATABASES = {
         'NAME': 'bfim',                      # Or path to database file if using sqlite3.
         'USER': 'bfim',                      # Not used with sqlite3.
         'PASSWORD': 'bfim',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'HOST': 'DB_HOST',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
@@ -122,6 +125,24 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'bfim/templates'),
+                 os.path.join(BASE_DIR, 'bfim_site/templates'),
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

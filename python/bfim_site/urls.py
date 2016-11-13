@@ -1,12 +1,12 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 # admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'', include('bfim.urls')),
-    url(r'bfim', include('bfim.urls')),
+    url(r'bfim', include('bfim.urls'))]
     # Examples:
     # url(r'^$', 'bfim_site.views.home', name='home'),
     # url(r'^bfim_site/', include('bfim_site.foo.urls')),
@@ -16,4 +16,3 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     # url(r'^admin/', include(admin.site.urls)),
-)

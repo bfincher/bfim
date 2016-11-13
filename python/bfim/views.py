@@ -1,7 +1,7 @@
 from django.shortcuts import render_to_response
 import datetime
-from classes import getFromWeb, parseDateMMDDYYYY
-from constants import _constants as const
+from .classes import getFromWeb, parseDateMMDDYYYY
+from .constants import _constants as const
 
 def index(request):
     daysPerYear = 365.24

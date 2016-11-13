@@ -1,4 +1,4 @@
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import datetime
 import time
 
@@ -40,12 +40,12 @@ def getFromWeb(beginDate, endDate):
     entries = []
     if (endDate >= now):
         url = "http://quote.yahoo.com/d/quotes.csv?s=^GSPC&f=sl1d1t1c1ohgv&e=.csv"
-	fileHandle = urllib2.urlopen(url)
-	content = fileHandle.read()
-	split = content.split(',')
-	price = split[1]
-	dateStr = split[2]
-	dateStr = dateStr.replace('"', '')
+        fileHandle = urllib.request.urlopen(url)
+        content = str(fileHandle.read())
+        split = content.split(',')
+        price = split[1]
+        dateStr = split[2]
+        dateStr = dateStr.replace('"', '')
 
         entry = SandPEntry(price, parseDateMMDDYYYYSlash(dateStr))
         entries.append(entry)
@@ -58,8 +58,8 @@ def getFromWeb(beginDate, endDate):
     url = url.replace(__END_YEAR_TAG, str(endDate.year))
     print(url)
         
-    fileHandle = urllib2.urlopen(url)
-    content = fileHandle.read()
+    fileHandle = urllib.request.urlopen(url)
+    content = str(fileHandle.read())
     lines = content.split('\n')
     fileHandle.close()
     
@@ -72,11 +72,11 @@ def getFromWeb(beginDate, endDate):
                 dateStr = split[0]
                 price = split[6]
             except IndexError :
-                print ('line = ' + line + '.')
+                print(('line = ' + line + '.'))
         
             entry = SandPEntry(price, parseDateYYYYMMDD(dateStr))
 
-	    if (len(entries) == 0 or entry.date != entries[0].date):
+            if (len(entries) == 0 or entry.date != entries[0].date):
                 entries.append(entry)
             
     for i in range(len(entries)) :
@@ -92,7 +92,7 @@ def getFromWeb(beginDate, endDate):
             entry.buySell = 'Buy'
         else:
             entry.buySell = ''
-        print entries[i]
+        print((entries[i]))
         
     return entries
 

@@ -1,6 +1,6 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
+from bfim.views import index, content
 
-urlpatterns = patterns('bfim.views',
-    url(r'^$', 'index'),
-    url(r'content/.*', 'content'),
-    )
+urlpatterns = [
+    url(r'^$', index),
+    url(r'content/.*', content)]
