@@ -2,6 +2,10 @@ import urllib.request, urllib.error, urllib.parse
 import datetime
 import time
 
+import logging
+
+logger = logging.getLogger('bfim.classes')
+
 class SandPEntry:
     
     fourDays = 0.0
@@ -36,6 +40,7 @@ __HISTORICAL_URL_STRING += __END_YEAR_TAG
 __HISTORICAL_URL_STRING += "&g=d&ignore=.csv";
 
 def getFromWeb(beginDate, endDate):
+    logger.debug('getFromWeb.  beginDate = %s, endDate = %s', beginDate, endDate)
     now = datetime.datetime.now().date()
     entries = []
     if (endDate >= now):
@@ -56,7 +61,7 @@ def getFromWeb(beginDate, endDate):
     url = url.replace(__END_MONTH_TAG, str(endDate.month))
     url = url.replace(__END_DAY_TAG, str(endDate.day))
     url = url.replace(__END_YEAR_TAG, str(endDate.year))
-    print(url)
+    logger.info('url = %s', url)
         
     fileHandle = urllib.request.urlopen(url)
     content = str(fileHandle.read())
@@ -65,6 +70,7 @@ def getFromWeb(beginDate, endDate):
     
     lines = lines[1:] # skip the header line
     
+    logger.debug('len(lines) = %s', len(lines))
     for line in lines:
         if (len(line) > 0) :
             split = line.split(',')
@@ -72,13 +78,16 @@ def getFromWeb(beginDate, endDate):
                 dateStr = split[0]
                 price = split[6]
             except IndexError :
-                print(('line = ' + line + '.'))
+                logger.error('IndexError.  line = %s.',line)
         
             entry = SandPEntry(price, parseDateYYYYMMDD(dateStr))
 
+            if len(entries) != 0:
+                logger.debug('entry.date %s, entries[0].date = %s', entry.date, entries[0].date)
             if (len(entries) == 0 or entry.date != entries[0].date):
                 entries.append(entry)
             
+    logger.debug('len(entries) = %s', len(entries))
     for i in range(len(entries)) :
         entry = entries[i]
         buyPercent = getCompValue(__BUY_DAYS, i, entries)
@@ -92,7 +101,7 @@ def getFromWeb(beginDate, endDate):
             entry.buySell = 'Buy'
         else:
             entry.buySell = ''
-        print((entries[i]))
+        logger.debug(entries[i])
         
     return entries
 
