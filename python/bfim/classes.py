@@ -46,7 +46,7 @@ def getFromWeb(beginDate, endDate):
     if (endDate >= now):
         url = "http://quote.yahoo.com/d/quotes.csv?s=^GSPC&f=sl1d1t1c1ohgv&e=.csv"
         fileHandle = urllib.request.urlopen(url)
-        content = str(fileHandle.read())
+        content = fileHandle.read().decode('utf-8')
         split = content.split(',')
         price = split[1]
         dateStr = split[2]
@@ -64,7 +64,8 @@ def getFromWeb(beginDate, endDate):
     logger.info('url = %s', url)
         
     fileHandle = urllib.request.urlopen(url)
-    content = str(fileHandle.read())
+    content = fileHandle.read().decode('utf-8')
+    logger.debug("BKF content = %s", content)
     lines = content.split('\n')
     fileHandle.close()
     
